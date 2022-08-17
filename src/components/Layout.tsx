@@ -111,6 +111,7 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
               Sign in with
             </h1>
             <SignInButton provider={SignInProvider.Facebook} text="Facebook" />
+            <SignInButton provider={SignInProvider.Discord} text="Discord" />
           </div>
         </motion.div>
       </>
