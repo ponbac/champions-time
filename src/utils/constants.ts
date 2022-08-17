@@ -11,7 +11,7 @@ export const GROUP_PREDICTIONS_CLOSE = "2022-07-07T23:00:00";
 export const PLAYOFF_PREDICTIONS_OPEN = "2022-07-18T23:00:00";
 export const PLAYOFF_PREDICTIONS_CLOSE = "2022-07-20T21:00:00";
 
-export const ADMIN_ID = "b0833ff0-5938-4355-b940-8c92ec1088cb";
+export const ADMIN_ID = "eb8fbd9c-13b6-4c32-8812-efa40be059b5";
 
 export const TBD_TEAM: Team = {
   id: -1,

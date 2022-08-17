@@ -16,7 +16,7 @@ const Home = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <Header text="[ENGLAND 2022]" />
+      <Header text="LEADERBOARD" />
       <div className="flex flex-col flex-0 justify-center items-center py-16 space-y-16">
         <UpcomingGames />
         <Leaderboard />

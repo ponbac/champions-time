@@ -20,7 +20,7 @@ const Head: FC<{ user?: PlayerUser }> = ({ user }) => {
   return (
     <Helmet>
       <title>
-        {user ? `[${user.name} - ${user.score}p]` : "Backman - [England 2022]"}
+        {user ? `[${user.name} - ${user.score}p]` : "Backman - [CL 22/23]"}
       </title>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link

@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "robots.txt", "apple-touch-icon.png"],
       manifest: {
-        name: "Backman - [England 2022]",
-        short_name: "[England 2022]",
-        description: "Fotbolls-EM England 2022.",
+        name: "Backman - [CL 22/23]",
+        short_name: "[CL 22/23]",
+        description: "Champions League 22/23",
         theme_color: "#EFD345",
         icons: [
           {

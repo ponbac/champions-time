@@ -244,15 +244,17 @@ const Schedule = () => {
             Toggle edit
           </button>
         )}
-        <CollapsibleContainer
-          title={"View played games"}
-          titleClassName="font-bold"
-          open={false}
-        >
-          {finishedGames.map((game) => (
-            <GameBlock key={game.id} game={game} adminMode={adminMode} />
-          ))}
-        </CollapsibleContainer>
+        {finishedGames.length > 0 && (
+          <CollapsibleContainer
+            title={"View played games"}
+            titleClassName="font-bold"
+            open={false}
+          >
+            {finishedGames.map((game) => (
+              <GameBlock key={game.id} game={game} adminMode={adminMode} />
+            ))}
+          </CollapsibleContainer>
+        )}
         {upcomingGames.map((game) => (
           <GameBlock key={game.id} game={game} adminMode={adminMode} />
         ))}
