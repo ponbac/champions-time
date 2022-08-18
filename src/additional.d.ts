@@ -29,6 +29,18 @@ type Game = {
   winner: number;
 };
 
+type DBGame = {
+  id: number;
+  finished: boolean;
+  homeTeam: number;
+  awayTeam: number;
+  homeGoals: number;
+  awayGoals: number;
+  date: string;
+  groupId: string;
+  winner: number | null;
+};
+
 type PlayerUser = {
   id: string;
   name: string;

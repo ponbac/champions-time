@@ -1,3 +1,5 @@
+import { isUrl } from "../utils/utils";
+
 type TeamFlagProps = {
   team: Team;
   width?: string;
@@ -12,7 +14,13 @@ const TeamFlag = (props: TeamFlagProps) => {
       draggable="false"
       className={className ? className : "rounded-sm"}
       alt={`${team.name} flag`}
-      src={`https://flagicons.lipis.dev/flags/4x3/${team.flagCode}.svg`}
+      src={
+        isUrl(team.flagCode)
+          ? team.flagCode
+          : team.flagCode.length < 4
+          ? `https://flagicons.lipis.dev/flags/4x3/${team.flagCode}.svg`
+          : `/images/team-logos/${team.flagCode}.svg`
+      }
     />
   );
 };

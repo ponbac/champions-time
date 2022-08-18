@@ -8,6 +8,15 @@ function sleep(ms: number) {
 
 export { sleep };
 
+export const isUrl = (url: string) => {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
   return {

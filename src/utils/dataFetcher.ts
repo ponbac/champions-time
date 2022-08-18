@@ -95,6 +95,15 @@ const fetchTeam = async (teamId?: string, teamName?: string): Promise<Team> => {
   return data;
 };
 
+const insertTeam = async (team: Team): Promise<any> => {
+  const { data, error } = await SUPABASE.from("teams").insert(team);
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
 // const useGames = (): {
 //   games: Game[] | undefined;
 //   isLoading: boolean;
@@ -148,6 +157,15 @@ const fetchGame = async (gameId: string): Promise<Game> => {
 
   return data[0];
 };
+
+const insertGame = async (game: DBGame): Promise<any> => {
+  const { data, error } = await SUPABASE.from("games").insert(game);
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
 
 const getCurrentUser = (): User | null => {
   const user = SUPABASE.auth.user();
@@ -282,5 +300,7 @@ export {
   updateUserData,
   updateUserPredictions,
   updateGame,
+  insertGame,
   isLoggedIn,
+  insertTeam,
 };
