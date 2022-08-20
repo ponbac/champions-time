@@ -73,7 +73,7 @@ const UpcomingGame = (props: UpcomingGameProps) => {
 
   return (
     <Link to={`/game/${game.id}`}>
-      <div className="flex flex-col items-center justify-center font-novaMono space-y-2 hover:bg-gray-700/70 rounded-xl transition-all p-2">
+      <div className="flex flex-col items-center justify-center font-novaMono space-y-2 hover:bg-gray-700/70 rounded-xl transition-all p-2 max-h-34">
         <div className="flex flex-row gap-4 justify-center items-center">
           <TeamFlag
             team={game.homeTeam}
@@ -129,7 +129,7 @@ const UpcomingGames = () => {
           <p className="font-bold text-2xl text-center mb-2">Upcoming:</p>
           <UpcomingGame games={games} />
           {games.filter((g) => !g.finished).length > 1 && (
-            <UpcomingGame games={games} offset={1} />
+            <UpcomingGame games={games} offset={2} />
           )}
         </div>
       )}

@@ -38,7 +38,7 @@ const PredictedGroup = (props: PredictedGroupProps) => {
       <div
         className={`${
           correctPlacing() ? "bg-green-500/50" : "bg-gray-400/30"
-        } gap-2 w-[17rem] mx-2 flex flex-row items-center font-novaMono backdrop-blur-sm py-2 px-4 rounded-lg`}
+        } gap-2 w-[17rem] mx-2 flex flex-row items-center font-novaMono backdrop-blur-sm py-2 px-4 rounded-lg h-12`}
       >
         <p className={"font-bold"}>{placing}.</p>
         <TeamFlag team={team} width="2.0rem" />

@@ -9,7 +9,7 @@ import TeamFlag from "./TeamFlag";
 
 const GroupItem: React.FC<{ team: Team }> = ({ team }) => {
   return (
-    <div className="gap-2 w-60 hover:cursor-pointer hover:bg-primary/30 transition-all mx-2 flex flex-row items-center font-novaMono bg-gray-400/30 backdrop-blur-sm py-2 px-4 rounded-lg">
+    <div className="gap-2 w-60 hover:cursor-pointer hover:bg-primary/30 transition-all mx-2 flex flex-row items-center font-novaMono bg-gray-400/30 backdrop-blur-sm py-2 px-4 rounded-lg h-12">
       <TeamFlag team={team} width="2.0rem" />
       <h1 className="font-bold">{team.name}</h1>
     </div>

@@ -12,7 +12,7 @@ const TeamFlag = (props: TeamFlagProps) => {
     <img
       style={{ width: width }}
       draggable="false"
-      className={className ? className : "rounded-sm"}
+      className={className ? className : "rounded-sm max-h-full"}
       alt={`${team.name} flag`}
       src={
         isUrl(team.flagCode)

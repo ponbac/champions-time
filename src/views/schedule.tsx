@@ -24,7 +24,7 @@ const TeamBlock = (props: TeamBlockProps) => {
   return (
     <div
       className={
-        "gap-2 backdrop-blur-sm py-2 px-4 flex flex-row items-center justify-between w-64 p-4 rounded-xl transition-all " +
+        "gap-2 backdrop-blur-sm py-2 px-4 flex flex-row items-center justify-between w-64 p-4 rounded-xl transition-all h-14 " +
         bgColor
       }
     >
