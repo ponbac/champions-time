@@ -129,7 +129,7 @@ const UpcomingGames = () => {
           <p className="font-bold text-2xl text-center mb-2">Upcoming:</p>
           <UpcomingGame games={games} />
           {games.filter((g) => !g.finished).length > 1 && (
-            <UpcomingGame games={games} offset={2} />
+            <UpcomingGame games={games} offset={1} />
           )}
         </div>
       )}
