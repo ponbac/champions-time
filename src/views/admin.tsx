@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useQuery } from "react-query";
 import { selectIsAdmin } from "../features/auth/authSlice";
-import { insertGame, insertTeam } from "../utils/dataFetcher";
+import { fetchTeams, insertGame, insertTeam } from "../utils/dataFetcher";
 import { useAppSelector } from "../utils/store";
 
 type AdminInputProps = {
@@ -25,11 +26,40 @@ const AdminInput = (props: AdminInputProps) => {
 };
 
 const AddGame = () => {
+  const { data: teams, isLoading, error } = useQuery("teams", fetchTeams);
+
   const [id, setId] = useState<string>("");
-  const [date, setDate] = useState<string>("2022-09-06T17:00:00");
+  const [date, setDate] = useState<string>("2022-09-06T21:00:00");
   const [homeTeamId, setHomeTeamId] = useState<string>("");
   const [awayTeamId, setAwayTeamId] = useState<string>("");
   const [groupId, setGroupId] = useState<string>("");
+
+  const SelectTeam = (props: {
+    teams: Team[];
+    value: string;
+    setValue: React.Dispatch<React.SetStateAction<string>>;
+    setGroup?: React.Dispatch<React.SetStateAction<string>>;
+  }) => {
+    return (
+      <select
+        className="px-2 py-[0.1rem] text-black rounded-md outline-none"
+        value={props.value}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+          props.setValue(e.target.value);
+          props.setGroup?.(
+            props.teams.find((t) => t.id === parseInt(e.target.value))
+              ?.groupId ?? ""
+          );
+        }}
+      >
+        {props.teams.map((team) => (
+          <option key={team.id} value={team.id}>
+            {team.name}
+          </option>
+        ))}
+      </select>
+    );
+  };
 
   const handleAdd = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (
@@ -50,24 +80,21 @@ const AddGame = () => {
         groupId: groupId,
         winner: null,
       });
+      setId((parseInt(id) + 1).toString());
     }
   };
+
+  if (!teams || isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="p-3 bg-gray-600/80 rounded-lg w-96 text-center space-y-2 flex flex-col items-center justify-center">
       <h1 className="font-bold">Add Game</h1>
       <AdminInput placeholder="ID" value={id} setValue={setId} />
       <AdminInput placeholder="Date" value={date} setValue={setDate} />
-      <AdminInput
-        placeholder="Home ID"
-        value={homeTeamId}
-        setValue={setHomeTeamId}
-      />
-      <AdminInput
-        placeholder="Away ID"
-        value={awayTeamId}
-        setValue={setAwayTeamId}
-      />
+      <SelectTeam teams={teams} value={homeTeamId} setValue={setHomeTeamId} setGroup={setGroupId} />
+      <SelectTeam teams={teams} value={awayTeamId} setValue={setAwayTeamId} setGroup={setGroupId} />
       <AdminInput
         placeholder="Group ID"
         value={groupId}
