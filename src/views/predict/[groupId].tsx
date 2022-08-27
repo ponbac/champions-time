@@ -10,7 +10,11 @@ import {
   savePredictions,
   selectPredictions,
 } from "../../features/predict/predictSlice";
-import { GROUP_PREDICTIONS_CLOSE, TBD_TEAM } from "../../utils/constants";
+import {
+  GROUPS,
+  GROUP_PREDICTIONS_CLOSE,
+  TBD_TEAM,
+} from "../../utils/constants";
 import LoadingIndicator from "../../components/LoadingIndicator";
 
 export const TeamBlock: FC<{
@@ -120,7 +124,7 @@ export const GameBlock = (props: GameBlockProps) => {
       winner = -1;
     }
 
-    console.log(winner)
+    console.log(winner);
 
     dispatch(
       predictGame({
@@ -265,7 +269,7 @@ const GroupBlock: FC<{}> = ({}) => {
             .map((game) => <GameBlock key={game.id} game={game} />)}
         <Link
           to={
-            (id as string).toUpperCase() === "D"
+            (id as string).toUpperCase() === GROUPS[GROUPS.length - 1]
               ? "/"
               : `/predict/group/${nextGroupId()}`
           }
@@ -276,7 +280,9 @@ const GroupBlock: FC<{}> = ({}) => {
           }}
         >
           <div className="hover:cursor-pointer text-center bg-gradient-to-r from-primary to-secondary text-white transition-all w-32 hover:w-36 hover:text-gray-400 p-2 rounded-xl font-bold">
-            {(id as string).toUpperCase() === "D" ? "Save" : "Next Group"}
+            {(id as string).toUpperCase() === GROUPS[GROUPS.length - 1]
+              ? "Save"
+              : "Next Group"}
           </div>
         </Link>
       </motion.div>
