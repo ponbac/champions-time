@@ -27,7 +27,7 @@ export const TeamBlock: FC<{
   return (
     <div
       className={
-        "gap-2 bg-gray-400/30 backdrop-blur-sm py-2 px-4 flex flex-row items-center justify-between w-72 p-4 rounded-xl transition-all h-14 " +
+        "gap-2 bg-gray-400/30 backdrop-blur-sm py-2 px-4 flex flex-row items-center justify-between w-80 p-4 rounded-xl transition-all h-14 " +
         (selected == true ? "bg-green-600/60" : "")
       }
     >
