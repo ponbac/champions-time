@@ -14,7 +14,7 @@ const Header = (props: HeaderProps) => {
       }`}
     >
       <h1
-        className="font-novaMono font-extrabold text-transparent text-7xl md:text-8xl bg-clip-text bg-gradient-to-b from-primary to-[#4D77FF]"
+        className="font-novaMono font-extrabold text-transparent text-5xl md:text-8xl bg-clip-text bg-gradient-to-b from-primary to-[#4D77FF]"
         style={{}}
       >
         {text}
