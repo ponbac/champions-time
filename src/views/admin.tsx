@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { selectIsAdmin } from "../features/auth/authSlice";
-import { fetchTeams, insertGame, insertTeam } from "../utils/dataFetcher";
+import {
+  fetchGames,
+  fetchTeams,
+  insertGame,
+  insertTeam,
+} from "../utils/dataFetcher";
 import { useAppSelector } from "../utils/store";
 
 type AdminInputProps = {
@@ -26,7 +31,8 @@ const AdminInput = (props: AdminInputProps) => {
 };
 
 const AddGame = () => {
-  const { data: teams, isLoading, error } = useQuery("teams", fetchTeams);
+  const { data: teams, isLoading: tIsLoading } = useQuery("teams", fetchTeams);
+  const { data: games, isLoading: gIsLoading } = useQuery("games", fetchGames);
 
   const [id, setId] = useState<string>("");
   const [date, setDate] = useState<string>("2022-09-06T21:00:00");
@@ -84,7 +90,13 @@ const AddGame = () => {
     }
   };
 
-  if (!teams || isLoading) {
+  useEffect(() => {
+    if (games) {
+      setId(Math.max(...games.map((g) => g.id)) + 1 + "");
+    }
+  }, [games]);
+
+  if (!teams || tIsLoading || !games || gIsLoading) {
     return <div>Loading...</div>;
   }
 
@@ -93,8 +105,18 @@ const AddGame = () => {
       <h1 className="font-bold">Add Game</h1>
       <AdminInput placeholder="ID" value={id} setValue={setId} />
       <AdminInput placeholder="Date" value={date} setValue={setDate} />
-      <SelectTeam teams={teams} value={homeTeamId} setValue={setHomeTeamId} setGroup={setGroupId} />
-      <SelectTeam teams={teams} value={awayTeamId} setValue={setAwayTeamId} setGroup={setGroupId} />
+      <SelectTeam
+        teams={teams}
+        value={homeTeamId}
+        setValue={setHomeTeamId}
+        setGroup={setGroupId}
+      />
+      <SelectTeam
+        teams={teams}
+        value={awayTeamId}
+        setValue={setAwayTeamId}
+        setGroup={setGroupId}
+      />
       <AdminInput
         placeholder="Group ID"
         value={groupId}
