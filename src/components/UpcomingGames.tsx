@@ -6,7 +6,7 @@ import { selectPredictions } from "../features/predict/predictSlice";
 import { TBD_TEAM } from "../utils/constants";
 import { fetchGames } from "../utils/dataFetcher";
 import { useAppSelector } from "../utils/store";
-import { findPrediction } from "../utils/utils";
+import { findPrediction, useWindowDimensions } from "../utils/utils";
 import LoadingIndicator from "./LoadingIndicator";
 import TeamFlag from "./TeamFlag";
 
@@ -106,6 +106,7 @@ const UpcomingGame = (props: UpcomingGameProps) => {
 };
 
 const UpcomingGames = () => {
+  const { height, width } = useWindowDimensions();
   const {
     data: games,
     isLoading,
@@ -135,6 +136,22 @@ const UpcomingGames = () => {
             )}
             {games.filter((g) => !g.finished).length > 3 && (
               <UpcomingGame games={games} offset={3} />
+            )}
+            {width > 1024 && (
+              <>
+                {games.filter((g) => !g.finished).length > 4 && (
+                  <UpcomingGame games={games} offset={4} />
+                )}
+                {games.filter((g) => !g.finished).length > 5 && (
+                  <UpcomingGame games={games} offset={5} />
+                )}
+                {games.filter((g) => !g.finished).length > 6 && (
+                  <UpcomingGame games={games} offset={6} />
+                )}
+                {games.filter((g) => !g.finished).length > 7 && (
+                  <UpcomingGame games={games} offset={7} />
+                )}
+              </>
             )}
           </div>
         </div>
