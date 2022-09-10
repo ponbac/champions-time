@@ -213,7 +213,7 @@ const Schedule = () => {
       setFinishedGames(
         games
           .filter((game) => game.finished)
-          .sort((a, b) => a.date.localeCompare(b.date))
+          .sort((a, b) => b.date.localeCompare(a.date))
       );
       setUpcomingGames(
         games
