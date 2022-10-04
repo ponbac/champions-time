@@ -137,21 +137,17 @@ const UpcomingGames = () => {
             {games.filter((g) => !g.finished).length > 3 && (
               <UpcomingGame games={games} offset={3} />
             )}
-            {width > 1024 && (
-              <>
-                {games.filter((g) => !g.finished).length > 4 && (
-                  <UpcomingGame games={games} offset={4} />
-                )}
-                {games.filter((g) => !g.finished).length > 5 && (
-                  <UpcomingGame games={games} offset={5} />
-                )}
-                {games.filter((g) => !g.finished).length > 6 && (
-                  <UpcomingGame games={games} offset={6} />
-                )}
-                {games.filter((g) => !g.finished).length > 7 && (
-                  <UpcomingGame games={games} offset={7} />
-                )}
-              </>
+            {games.filter((g) => !g.finished).length > 4 && (
+              <UpcomingGame games={games} offset={4} />
+            )}
+            {games.filter((g) => !g.finished).length > 5 && (
+              <UpcomingGame games={games} offset={5} />
+            )}
+            {games.filter((g) => !g.finished).length > 6 && (
+              <UpcomingGame games={games} offset={6} />
+            )}
+            {games.filter((g) => !g.finished).length > 7 && (
+              <UpcomingGame games={games} offset={7} />
             )}
           </div>
         </div>
