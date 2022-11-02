@@ -143,10 +143,10 @@ const UpcomingGames = () => {
             {games.filter((g) => !g.finished).length > 5 && (
               <UpcomingGame games={games} offset={5} />
             )}
-            {games.filter((g) => !g.finished).length > 6 && (
+            {games.filter((g) => !g.finished).length > 5 && (
               <UpcomingGame games={games} offset={6} />
             )}
-            {games.filter((g) => !g.finished).length > 7 && (
+            {games.filter((g) => !g.finished).length > 5 && (
               <UpcomingGame games={games} offset={7} />
             )}
           </div>
