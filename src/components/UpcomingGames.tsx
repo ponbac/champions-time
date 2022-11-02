@@ -53,6 +53,7 @@ const UpcomingGame = (props: UpcomingGameProps) => {
     }
 
     const nextGame = sortedGames[nextGameIndex + offset];
+    console.log("nextGame: ", nextGame);
     //const nextGame = sortedGames[4 + offset];
 
     if (nextGame.homeTeam === null) {
@@ -113,6 +114,12 @@ const UpcomingGames = () => {
     error,
   } = useQuery("games", fetchGames, { refetchInterval: 60 * 1000 });
 
+  const unfinishedGames = games
+    ? games.filter((g) =>
+        moment(g.date).isAfter(moment().subtract(300, "minutes"))
+      )
+    : [];
+
   if (!games) {
     return (
       <div className="flex flex-col items-center justify-center bg-gray-400/40 w-72 py-3 rounded-3xl font-novaMono space-y-4">
@@ -121,38 +128,19 @@ const UpcomingGames = () => {
     );
   }
 
+  if (unfinishedGames.length === 0) {
+    return null;
+  }
+
   return (
-    <>
-      {games.filter((g) => !g.finished).length > 0 && (
-        <div className="flex flex-col items-center justify-center bg-gray-400/40 w-72 lg:w-fit py-3 rounded-3xl font-novaMono">
-          <p className="font-bold text-2xl text-center mb-2">Upcoming:</p>
-          <div className="lg:grid lg:grid-cols-4 lg:gap-x-8 lg:px-4">
-            <UpcomingGame games={games} offset={0} />
-            {games.filter((g) => !g.finished).length > 1 && (
-              <UpcomingGame games={games} offset={1} />
-            )}
-            {games.filter((g) => !g.finished).length > 2 && (
-              <UpcomingGame games={games} offset={2} />
-            )}
-            {games.filter((g) => !g.finished).length > 3 && (
-              <UpcomingGame games={games} offset={3} />
-            )}
-            {games.filter((g) => !g.finished).length > 4 && (
-              <UpcomingGame games={games} offset={4} />
-            )}
-            {games.filter((g) => !g.finished).length > 5 && (
-              <UpcomingGame games={games} offset={5} />
-            )}
-            {games.filter((g) => !g.finished).length > 5 && (
-              <UpcomingGame games={games} offset={6} />
-            )}
-            {games.filter((g) => !g.finished).length > 5 && (
-              <UpcomingGame games={games} offset={7} />
-            )}
-          </div>
-        </div>
-      )}
-    </>
+    <div className="flex flex-col items-center justify-center bg-gray-400/40 w-72 lg:w-fit py-3 rounded-3xl font-novaMono">
+      <p className="font-bold text-2xl text-center mb-2">Upcoming:</p>
+      <div className="lg:grid lg:grid-cols-4 lg:gap-x-8 lg:px-4">
+        {unfinishedGames.map((g, i) => (
+          <UpcomingGame games={games} offset={i} key={g.id} />
+        ))}
+      </div>
+    </div>
   );
 };
 
