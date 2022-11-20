@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { selectPredictions } from "../features/predict/predictSlice";
@@ -106,19 +106,25 @@ const UpcomingGame = (props: UpcomingGameProps) => {
   );
 };
 
-const UpcomingGames = () => {
-  const { height, width } = useWindowDimensions();
+const UpcomingGames = ({ numberOfGames }: { numberOfGames: number }) => {
+  // const { height, width } = useWindowDimensions();
   const {
     data: games,
     isLoading,
     error,
   } = useQuery("games", fetchGames, { refetchInterval: 60 * 1000 });
 
-  const unfinishedGames = games
-    ? games.filter((g) =>
-        moment(g.date).isAfter(moment().subtract(300, "minutes"))
-      )
-    : [];
+  const unfinishedGames = useMemo(
+    () =>
+      games
+        ? games
+            .filter((g) =>
+              moment(g.date).isAfter(moment().subtract(300, "minutes"))
+            )
+            .sort((a, b) => a.date.localeCompare(b.date))
+        : [],
+    [games]
+  );
 
   if (!games) {
     return (
@@ -136,9 +142,14 @@ const UpcomingGames = () => {
     <div className="flex flex-col items-center justify-center bg-gray-400/40 w-72 lg:w-fit py-3 rounded-3xl font-novaMono">
       <p className="font-bold text-2xl text-center mb-2">Upcoming:</p>
       <div className="lg:grid lg:grid-cols-4 lg:gap-x-8 lg:px-4">
-        {unfinishedGames.map((g, i) => (
-          <UpcomingGame games={games} offset={i} key={g.id} />
-        ))}
+        {unfinishedGames
+          .slice(
+            0,
+            unfinishedGames.length > numberOfGames ? numberOfGames : undefined
+          )
+          .map((g, i) => (
+            <UpcomingGame games={games} offset={i} key={g.id} />
+          ))}
       </div>
     </div>
   );
