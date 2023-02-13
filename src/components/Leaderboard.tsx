@@ -1,9 +1,18 @@
 import { motion } from "framer-motion";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { fetchAllUsers } from "../utils/dataFetcher";
 import LoadingIndicator from "./LoadingIndicator";
+import TeamFlag from "./TeamFlag";
+
+const CountryToFlagEmoji = {
+  Argentina: "🇦🇷",
+  Spain: "🇪🇸",
+  France: "🇫🇷",
+  Brazil: "🇧🇷",
+  England: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+} as const;
 
 type PlayerItemProps = {
   rank: number;
@@ -25,9 +34,31 @@ const PlayerItem = (props: PlayerItemProps) => {
     }
   };
 
+  const hasPlayoffPredictions =
+    player.predictions?.length == 12 &&
+    player.predictions[8].games.length == 8 &&
+    player.predictions[9].games.length == 4 &&
+    player.predictions[10].games.length == 2 &&
+    player.predictions[11].games.length == 1;
+
+  const winnerId = hasPlayoffPredictions
+    ? player.predictions?.[11].games[0].winner
+    : null;
+  const winnerTeam: Team = useMemo(() => {
+    if (winnerId) {
+      return player.predictions
+        .flatMap((p) => p.result)
+        .filter((r) => r.id == winnerId)[0];
+    }
+    return null;
+  }, [player.predictions, winnerId]);
+
   return (
     <Link to={`/profile/${player.id}`}>
-      <div className="font-novaMono mb-2 hover:cursor-pointer hover:bg-primary/40 transition-all mx-2 flex flex-row items-center gap-5 lg:gap-11 bg-gray-400/40 backdrop-blur-sm py-2 px-6 rounded-lg">
+      <div
+        className={`font-novaMono mb-2 hover:cursor-pointer hover:bg-primary/40 transition-all mx-2 flex flex-row items-center gap-5 lg:gap-11 ${hasPlayoffPredictions ? "bg-gray-400/40" : "bg-red-500/40"
+          } backdrop-blur-sm py-2 px-6 rounded-lg`}
+      >
         <h1 className={`text-4xl font-bold`}>
           <span className={rankColor(rank)}>{rank}</span>.
         </h1>
@@ -44,10 +75,15 @@ const PlayerItem = (props: PlayerItemProps) => {
         <div className="flex-1 lg:w-72 overflow-hidden">
           <h1 className="text-xl font-bold text-ellipsis overflow-hidden">
             {player.name ?? "Unknown"}
+            {player.money ? "    💵" : "    🍜"}
           </h1>
-          <p className="text-sm text-gray-400 text-ellipsis overflow-hidden h-5">
-            {player.description ?? "Who might this be!?"}
-          </p>
+          {hasPlayoffPredictions ? (
+            winnerTeam && <TeamFlag team={winnerTeam} width="1.5rem" className="rounded-md max-h-full mt-1" />
+          ) : (
+            <h1 className="text-md text-red-500">
+              Playoff predictions missing!
+            </h1>
+          )}
         </div>
         <h1 className="text-3xl font-bold">{player.score}p</h1>
       </div>
@@ -60,10 +96,16 @@ type PlayerListProps = {
 };
 const PlayerList = (props: PlayerListProps) => {
   const { players } = props;
-  players.sort((a, b) => b.score - a.score);
+
+  const filteredPlayers = useMemo(() => {
+    return players
+      .filter((player) => (player.predictions ? true : false))
+      .sort((a, b) => b.score - a.score);
+  }, [players]);
+
   return (
     <ul className="space-y-2">
-      {players.map((player, index) => {
+      {filteredPlayers.map((player, index) => {
         return <PlayerItem key={index} rank={index + 1} player={player} />;
       })}
     </ul>

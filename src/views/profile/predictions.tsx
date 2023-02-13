@@ -11,7 +11,7 @@ import { TeamBlock } from "../predict/[groupId]";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import { useQuery } from "react-query";
 import { TBD_TEAM } from "../../utils/constants";
-import { calcFinal, calcSemifinals } from "../../utils/utils";
+import { calcFinal, calcQuarters, calcSemifinals } from "../../utils/utils";
 import CollapsibleContainer from "../../components/CollapsibleContainer";
 
 type PredictedGroupProps = {
@@ -36,9 +36,8 @@ const PredictedGroup = (props: PredictedGroupProps) => {
 
     return (
       <div
-        className={`${
-          correctPlacing() ? "bg-green-500/50" : "bg-gray-400/30"
-        } gap-2 w-[17rem] mx-2 flex flex-row items-center font-novaMono backdrop-blur-sm py-2 px-4 rounded-lg h-12`}
+        className={`${correctPlacing() ? "bg-green-500/50" : "bg-gray-400/30"
+          } gap-2 w-[17rem] mx-2 flex flex-row items-center font-novaMono backdrop-blur-sm py-2 px-4 rounded-lg h-12`}
       >
         <p className={"font-bold"}>{placing}.</p>
         <TeamFlag team={team} width="2.0rem" />
@@ -73,6 +72,8 @@ const PredictedGames = (props: PredictedGamesProps) => {
   const parseName = (groupName: string) => {
     if (groupName.length == 1) {
       return "Group " + groupName;
+    } else if (groupName == "EIGHTS") {
+      return "Round of 16";
     } else if (groupName == "QUARTERS") {
       return "Quarterfinals";
     } else if (groupName == "SEMIS") {
@@ -85,9 +86,10 @@ const PredictedGames = (props: PredictedGamesProps) => {
   // Calculates semis and final based on quarters predictions
   useEffect(() => {
     if (games) {
-      const quarters = games
-        .filter((game) => game.groupId === "QUARTERS")
-        .sort((a, b) => a.date.localeCompare(b.date));
+      const eights = games
+        .filter((game) => game.groupId === "EIGHTS")
+        .sort((a, b) => a.date.localeCompare(b.date))
+      const quarters = calcQuarters(eights, predictions);
       const semis = calcSemifinals(quarters, predictions);
       const final = calcFinal(semis, predictions);
 
@@ -146,7 +148,9 @@ const PredictedGames = (props: PredictedGamesProps) => {
     const resultPoints = () => {
       let points = 0;
       if (correctPrediction) {
-        if (playedGame?.groupId == "QUARTERS") {
+        if (playedGame?.groupId === "EIGHTS") {
+          points = 4;
+        } else if (playedGame?.groupId == "QUARTERS") {
           points = 6;
         } else if (playedGame?.groupId == "SEMIS") {
           points = 8;
@@ -158,7 +162,7 @@ const PredictedGames = (props: PredictedGamesProps) => {
 
         if (correctScore) {
           if ((playedGame?.groupId.length ?? 0) > 1) {
-            points += 3;
+            points += 2;
           } else {
             points += 1;
           }

@@ -47,6 +47,7 @@ type PlayerUser = {
   description: string;
   avatar: string;
   score: number;
+  money: boolean;
   predictions: GroupPrediction[];
 };
 

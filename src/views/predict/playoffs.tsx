@@ -10,11 +10,12 @@ import {
 import { PLAYOFF_PREDICTIONS_CLOSE } from "../../utils/constants";
 import { fetchGames } from "../../utils/dataFetcher";
 import { useAppDispatch, useAppSelector } from "../../utils/store";
-import { calcSemifinals, calcFinal } from "../../utils/utils";
+import { calcSemifinals, calcFinal, calcQuarters } from "../../utils/utils";
 import { GameBlock } from "./[groupId]";
 
 const PredictPlayoffs = () => {
   const { data: games, isLoading, error } = useQuery("games", fetchGames);
+  const [eights, setEights] = useState<Game[]>([]);
   const [quarters, setQuarters] = useState<Game[]>([]);
   const [semis, setSemis] = useState<Game[]>([]);
   const [final, setFinal] = useState<Game[]>([]);
@@ -30,15 +31,28 @@ const PredictPlayoffs = () => {
     }
 
     if (games) {
-      setQuarters(
+      setEights(
         games
-          .filter((game) => game.groupId === "QUARTERS")
+          .filter((game) => game.groupId === "EIGHTS")
           .sort((a, b) => a.date.localeCompare(b.date))
       );
+      setQuarters(calcQuarters(eights, predictions));
       setSemis(calcSemifinals(quarters, predictions));
       setFinal(calcFinal(semis, predictions));
     }
   }, [games, predictions]);
+
+  useEffect(() => {
+    function checkTime() {
+      const currentTime = moment();
+      if (currentTime.isAfter(PLAYOFF_PREDICTIONS_CLOSE)) {
+        setPredictionsClosed(true);
+      }
+    }
+
+    const interval = setInterval(checkTime, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   if (predictionsClosed) {
     return (
@@ -60,41 +74,63 @@ const PredictPlayoffs = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <h1 className="text-center text-7xl font-bold font-novaMono pb-3 pt-8 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-        Playoffs
-      </h1>
+      <div className="flex flex-row gap-4 justify-center items-center">
+        <h1 className="text-center text-7xl font-bold font-novaMono pb-3 pt-8 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+          Playoffs
+        </h1>
+        <img
+          className="w-min mt-8"
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/199.gif"
+          alt="Gengar"
+        />
+      </div>
       <h2 className=" text-lg px-2 text-center font-bold">
-        Correct winner grants 6 points in quarters, 8 points in semis and 10
-        points in the final. <br /> +3 for correct score. <br />{" "}
+        Correct winner grants 4 points in round of 16, 6 points in quarters, 8
+        points in semis and 10 points in the final. <br /> +2 for correct score.{" "}
+        <br />{" "}
         <span className="italic text-base">
           (Score includes potential goals scored after ordinary game time, e.g.
           penalty shoot-out)
         </span>
       </h2>
+      {eights.length > 0 && (
+        <div className="flex flex-col items-center justify-center space-y-2">
+          <h2 className="text-4xl font-bold mb-4">Round of 16</h2>
+          <div className="flex flex-col space-y-10 md:space-y-2">
+            {eights.map((game) => (
+              <GameBlock game={game} />
+            ))}
+          </div>
+        </div>
+      )}
       {quarters.length > 0 && (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center space-y-2">
           <h2 className="text-4xl font-bold mb-4">Quarters</h2>
-          {quarters.map((game) => (
-            <GameBlock game={game} />
-          ))}
+          <div className="flex flex-col space-y-10 md:space-y-2">
+            {quarters.map((game) => (
+              <GameBlock game={game} />
+            ))}
+          </div>
         </div>
       )}
       {semis.length > 0 && (
         <motion.div
-          className="flex flex-col items-center justify-center"
+          className="flex flex-col items-center justify-center space-y-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-4xl font-bold mb-4">Semis</h2>
-          {semis.map((game) => (
-            <GameBlock game={game} />
-          ))}
+          <div className="flex flex-col space-y-10 md:space-y-2">
+            {semis.map((game) => (
+              <GameBlock game={game} />
+            ))}
+          </div>
         </motion.div>
       )}
       {final.length > 0 && (
         <motion.div
-          className="flex flex-col items-center justify-center"
+          className="flex flex-col items-center justify-center space-y-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}

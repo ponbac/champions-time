@@ -68,10 +68,10 @@ const PredictionsList = (props: PredictionsListProps) => {
     const resultBgColor = () => {
       if (prediction && game.finished) {
         game.winner = game.winner == null ? -1 : game.winner;
-        const correctPrediction = prediction.winner == game.winner;
+        const correctPrediction = prediction.winner === game.winner;
         const correctScore =
-          prediction.homeGoals == game.homeGoals &&
-          prediction.awayGoals == game.awayGoals;
+          prediction.homeGoals === game.homeGoals &&
+          prediction.awayGoals === game.awayGoals;
         if (correctScore) {
           return "bg-blue-400/40";
         } else if (correctPrediction) {
@@ -90,6 +90,10 @@ const PredictionsList = (props: PredictionsListProps) => {
         setPrediction(prediction);
       }
     }, []);
+
+    if (!prediction) {
+      return null;
+    }
 
     return (
       <Link to={`/profile/${user.id}`}>
@@ -152,7 +156,7 @@ const GameView = (props: GameViewProps) => {
     }
   }, [id]);
 
-  if (!game || !users) {
+  if (!(game && users)) {
     return <LoadingIndicator fullscreen={true} />;
   }
 
@@ -163,7 +167,7 @@ const GameView = (props: GameViewProps) => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex flex-col items-center justify-center min-h-screen font-novaMono">
+      <div className="flex flex-col items-center justify-center min-h-screen font-novaMono py-8">
         <GameBox game={game} />
         <PredictionsList users={users} game={game} className="mt-8" />
       </div>

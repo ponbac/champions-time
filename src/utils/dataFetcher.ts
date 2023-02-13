@@ -71,7 +71,8 @@ const fetchGroup = async (groupId: string): Promise<Group> => {
     homeTeam: homeTeam ( id, name, flagCode, groupId ),
     awayTeam: awayTeam ( id, name, flagCode, groupId ),
     date,
-    groupId
+    groupId,
+    winner
     `
     )
     .eq("groupId", groupId.toUpperCase());
@@ -111,7 +112,7 @@ const insertTeam = async (team: Team): Promise<any> => {
   }
 
   return data;
-}
+};
 
 // const useGames = (): {
 //   games: Game[] | undefined;
@@ -174,7 +175,7 @@ const insertGame = async (game: DBGame): Promise<any> => {
   }
 
   return data;
-}
+};
 
 const getCurrentUser = (): User | null => {
   const user = SUPABASE.auth.user();
@@ -213,6 +214,11 @@ const fetchAllUsers = async (): Promise<any> => {
   let parsedUsers = data.map((user) => {
     if (user.predictions != null) {
       user.predictions = JSON.parse(user.predictions);
+      try {
+        user.predictions = JSON.parse(user.predictions);
+      } catch (e) {
+        console.error(`Error parsing predictions for user ${user.name}: ${e}`);
+      }
     }
     return user;
   });
@@ -224,10 +230,21 @@ const updateUserData = async (
   userId: string,
   name: string,
   avatar: string,
-  description: string
+  description: string,
+  money?: boolean
 ): Promise<any> => {
+  let updateObject: any = {
+    name: name,
+    avatar: avatar,
+    description: description,
+  };
+
+  if (money !== undefined) {
+    updateObject = { ...updateObject, money: money };
+  }
+
   const { data, error } = await SUPABASE.from("users")
-    .update({ name: name, avatar: avatar, description: description })
+    .update(updateObject)
     .match({ id: userId });
 
   if (error) {
